@@ -7,7 +7,10 @@ from .serializers import AccountSerializer
 
 class AccountViewSet(viewsets.GenericViewSet,
                      mixins.ListModelMixin,
-                     mixins.CreateModelMixin):
+                     mixins.CreateModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.DestroyModelMixin,
+                     mixins.UpdateModelMixin):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     queryset = Account.objects.all()
@@ -18,4 +21,7 @@ class AccountViewSet(viewsets.GenericViewSet,
                 '-updated_at')
 
     def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    
+    def perform_update(self, serializer):
         serializer.save(user=self.request.user)
