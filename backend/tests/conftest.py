@@ -2,7 +2,12 @@ import pytest
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from budget_app.models import Account, Transaction
+import datetime
 
+
+@pytest.fixture(scope="function")
+def today():
+    return datetime.date.today()
 
 @pytest.fixture(scope="function")
 def api_client():

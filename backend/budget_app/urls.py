@@ -5,9 +5,9 @@ from . import views
 
 
 router = DefaultRouter()
-router.register('list', views.AccountViewSet)
+router.register('accounts', views.AccountViewSet)
 app_name = 'budget'
 
 urlpatterns = [
-    path('account/', include(router.urls)),
+    path('', include(router.urls)),
 ]
