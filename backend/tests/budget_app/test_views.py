@@ -29,7 +29,7 @@ def test_retrieve_accounts(api_client, create_logged_user):
 
 
 @pytest.mark.django_db
-def test_tags_limited_to_user(api_client, create_logged_user):
+def test_account_limited_to_user(api_client, create_logged_user):
     user_logged = create_logged_user
     user_not_logged = get_user_model().objects.create_user(
         'othermail@vp.pl',
@@ -72,17 +72,17 @@ def test_retrieve_account(api_client, create_logged_user):
     account_id = Account.objects.get(
         name=payload['name']
     ).id
-    single_account = reverse('budget:account-detail', args=(account_id,))
-    resp = api_client.get(single_account)
+    single_account_url = reverse('budget:account-detail', args=(account_id,))
+    resp = api_client.get(single_account_url)
     assert resp.status_code == 200
-
+    assert payload['name'] == resp.data['name']
 
 @pytest.mark.django_db
 def test_retrieve_account_invalid_id(api_client, create_logged_user):
     payload = {'name':'account1', 'description':'Random description1'}
     api_client.post(ACCOUNTS_URL, payload)
-    single_account = reverse('budget:account-detail', args=(555,))
-    resp = api_client.get(single_account)
+    single_account_url = reverse('budget:account-detail', args=(555,))
+    resp = api_client.get(single_account_url)
     assert resp.status_code == 404
 
 
@@ -95,8 +95,8 @@ def test_delete_account_not_logged(api_client, create_logged_user):
         name=payload['name']
     ).id
     api_client.force_authenticate(user=None)
-    single_account = reverse('budget:account-detail', args=(account_id,))
-    resp = api_client.delete(single_account)
+    single_account_url = reverse('budget:account-detail', args=(account_id,))
+    resp = api_client.delete(single_account_url)
     assert resp.status_code == 401
 
 
@@ -107,8 +107,8 @@ def test_delete_account(api_client, create_logged_user):
     account_id = Account.objects.get(
         name=payload['name']
     ).id
-    single_account = reverse('budget:account-detail', args=(account_id,))
-    resp = api_client.delete(single_account)
+    single_account_url = reverse('budget:account-detail', args=(account_id,))
+    resp = api_client.delete(single_account_url)
     assert resp.status_code == 204
 
 
@@ -116,6 +116,36 @@ def test_delete_account(api_client, create_logged_user):
 def test_delete_account_invalid_id(api_client, create_logged_user):
     payload = {'name':'account1', 'description':'Random description1'}
     api_client.delete(ACCOUNTS_URL, payload)
-    single_account = reverse('budget:account-detail', args=(555,))
-    resp = api_client.get(single_account)
+    single_account_url = reverse('budget:account-detail', args=(555,))
+    resp = api_client.get(single_account_url)
     assert resp.status_code == 404
+
+@pytest.mark.django_db
+def test_partial_update_account(api_client, create_logged_user):
+    user = create_logged_user
+    account = Account.objects.create(user=user, name='account1',
+                                     description='Random description')
+    payload = {'name':'Changedname'}
+    single_account_url = reverse('budget:account-detail', args=(account.id,))
+    api_client.patch(single_account_url, payload)
+
+    account.refresh_from_db()
+    assert account.name ==  payload['name']
+
+
+
+@pytest.mark.django_db
+def test_full_update_account(api_client, create_logged_user):
+    user = create_logged_user
+    account = Account.objects.create(user=user, name='account1',
+                                     description='Random description')
+    payload = {
+			'name':'accountUpdated', 
+            'description':'descriptionupdated'
+		}
+    single_account_url = reverse('budget:account-detail', args=(account.id,))
+    api_client.put(single_account_url, payload)
+
+    account.refresh_from_db()
+    assert account.name ==  payload['name']
+    assert account.description == payload['description']
