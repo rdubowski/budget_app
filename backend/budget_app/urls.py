@@ -5,7 +5,7 @@ from . import views
 
 
 router = DefaultRouter()
-router.register('account', views.AccountViewSet)
+router.register('list', views.AccountViewSet)
 app_name = 'budget'
 
 urlpatterns = [
