@@ -10,4 +10,7 @@ app_name = 'budget'
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('accounts/<int:pk>/transactions/',
+     views.TransactionsViewSet.as_view(),
+     name='transactions-list')
 ]

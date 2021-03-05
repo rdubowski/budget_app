@@ -7,10 +7,10 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ('user', 'name', 'description','init_balance',
+        fields = ('id', 'user', 'name', 'description','init_balance',
                   'transactions', 'created_at', 'updated_at',
                   'deposit_sum', 'withdraw_sum', 'actual_balance')
-        read_only_fields = ['user', 'created_at', 'updated_at',
+        read_only_fields = ['id', 'user', 'created_at', 'updated_at',
                             'deposit_sum', 'withdraw_sum', 'actual_balance']
 
 class TransactionSerializer(serializers.ModelSerializer):
