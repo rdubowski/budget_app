@@ -1,7 +1,7 @@
 import pytest
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
-
+from budget_app.models import Account
 
 @pytest.fixture(scope="function")
 def api_client():
@@ -31,3 +31,11 @@ def create_logged_user(api_client, create_user):
     user = create_user
     api_client.force_authenticate(user=user)
     return user
+
+
+@pytest.mark.django_db
+@pytest.fixture(scope="function")
+def create_account(create_user):
+    user = create_user
+    account = Account.objects.create(user=user, name='account1',
+                                    description='Random description')

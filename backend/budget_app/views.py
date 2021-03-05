@@ -1,6 +1,21 @@
 from django.http import JsonResponse
+from rest_framework import viewsets, mixins
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from .models import Account
+from .serializers import AccountSerializer
 
 
-def test(request):
-    data = {"test": "test!"}
-    return JsonResponse(data)
+class AccountViewSet(viewsets.GenericViewSet,
+                     mixins.ListModelMixin,
+                     mixins.CreateModelMixin):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user).order_by('-updated_at')
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
