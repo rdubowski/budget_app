@@ -8,6 +8,7 @@ from rest_framework import status
 from .models import Account, Transaction
 from .serializers import AccountSerializer, TransactionSerializer
 
+
 class AccountViewSet(viewsets.GenericViewSet,
                      mixins.ListModelMixin,
                      mixins.CreateModelMixin,

@@ -152,10 +152,72 @@ def test_full_update_account(api_client, create_logged_user):
 
 
 @pytest.mark.django_db
-def test_list_transactions(api_client, create_logged_user, create_account):
-    """Show list of transactions for logged user """
-    user = create_logged_user
+def test_list_transactions_not_logged(api_client, create_account):
     account = create_account
     list_transactions_url = reverse('budget:transactions', args=(account.id,))
     resp = api_client.get(list_transactions_url)
+    assert resp.status_code == 401 
+
+
+@pytest.mark.django_db
+def test_list_transactions_for_single_account(api_client,
+                                             create_logged_user, 
+                                             create_account,
+                                             create_custom_transaction):
+    """Show list of transactions for logged user and his account """
+    user = create_logged_user
+    account = create_account
+    transaction_payload_1 = {'amount': 1500, 'name': 'transaction1',
+                           'transaction_type': 'D', 'account': account}
+    transaction_payload_2 = {'amount': 500, 'name': 'transaction2',
+                           'transaction_type': 'D', 'account': account}
+    transaction_1 = create_custom_transaction(**transaction_payload_1)
+    transaction_2 = create_custom_transaction(**transaction_payload_2)
+    transactions = Transaction.objects.filter(account=account.pk)
+    serializer = TransactionSerializer(transactions, many=True)
+    list_transactions_url = reverse('budget:transactions', args=(account.id,))
+    resp = api_client.get(list_transactions_url)
     assert resp.status_code == 200
+    assert resp.data == serializer.data 
+
+
+@pytest.mark.django_db
+def test_list_transactions_seperate_accounts(api_client,
+                                             create_logged_user,
+                                             create_account,
+                                             create_custom_transaction):
+    """Show list of transactions for logged user and his account """
+    user = create_logged_user
+    account = create_account
+    account_2 = Account.objects.create(user=user, name='account_2',
+                                     description='Random description')
+    transaction_payload = {'amount': 1500, 'name': 'transaction1',
+                           'transaction_type': 'D', 'account': account}
+    transaction_payload_diff_acc = {'amount': 500, 'name': 'transaction2',
+                           'transaction_type': 'D', 'account': account_2}
+    transaction_1 = create_custom_transaction(**transaction_payload)
+    transaction_2 = create_custom_transaction(**transaction_payload_diff_acc)
+    transactions = Transaction.objects.filter(account=account.pk)
+    serializer = TransactionSerializer(transactions, many=True)
+    list_transactions_url = reverse('budget:transactions', args=(account.id,))
+    resp = api_client.get(list_transactions_url)
+    assert resp.status_code == 200
+    assert resp.data == serializer.data 
+
+
+@pytest.mark.django_db
+def test_create_transaction_successful(api_client, create_logged_user,create_account):
+        user = create_logged_user
+        account = create_account
+        payload = {
+        "amount": "1133.00",
+        "name": "po",
+        "transaction_type": "W"
+        }
+        list_transactions_url = reverse('budget:transactions', args=(account.id,))
+        resp = api_client.post(list_transactions_url, payload)
+        exists = Transaction.objects.filter(
+            account=account,
+            name=payload['name']
+        ).exists()
+        assert exists

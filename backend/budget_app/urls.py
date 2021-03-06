@@ -10,6 +10,6 @@ app_name = 'budget'
 
 urlpatterns = [
     path('', include(router.urls)),
-    path ('accounts/<int:pk>/transactions/', views.transactions,
-     name='transactions'),
+    path('accounts/<int:pk>/transactions/', views.transactions,
+         name='transactions'),
 ]
