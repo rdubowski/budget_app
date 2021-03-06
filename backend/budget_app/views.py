@@ -30,44 +30,24 @@ class AccountViewSet(viewsets.GenericViewSet,
         serializer.save(user=self.request.user)
 
 
-class TransactionsViewSet(ListAPIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-    queryset = Transaction.objects.all()
-    serializer_class = TransactionSerializer
-
-
-    def list(self, request, pk=None):
-        try:
-            account = Account.objects.get(pk=pk)
-            if self.request.user == account.user:
-                queryset = Transaction.objects.filter(account=pk)
-                serializer = self.get_serializer(queryset, many=True)
-                return Response(serializer.data)
-            else:
-                message = {'detail': 'You are unauthorized to see transactions'}
-                return Response(message, status=status.HTTP_401_UNAUTHORIZED)
-        except:
-            message = {'detail': 'This account doesnt exist'}
-            return Response(message, status=status.HTTP_404_NOT_FOUND)
-
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated,])
 @authentication_classes([TokenAuthentication,])
-def create_transaction(request, pk):
-    data = request.data
+def transactions(request, pk=None):
     account = Account.objects.get(pk=pk)
     if request.user == account.user:
-        user = Transaction.objects.create(
-        amount=data['amount'], 
-        name=data['name'],
-        transaction_type=data['transaction_type'], 
-        account=account,
-            )
-        serializer = TransactionSerializer(user, many=False)
+        if request.method == 'POST':
+            data = request.data
+            user = Transaction.objects.create(
+            amount=data['amount'], 
+            name=data['name'],
+            transaction_type=data['transaction_type'], 
+            account=account,
+                )
+            serializer = TransactionSerializer(user, many=False)
+            return Response(serializer.data)
+        transactions = Transaction.objects.filter(account=pk)
+        serializer = TransactionSerializer(transactions, many=True)
         return Response(serializer.data)
-    else:
-        message = {'detail': 'You are unauthorized to post on this adress'}
-        return Response(message, status=status.HTTP_401_UNAUTHORIZED)
-
-
+    message = {'detail': 'You are unauthorized to reach this account'}
+    return Response(message, status=status.HTTP_401_UNAUTHORIZED)

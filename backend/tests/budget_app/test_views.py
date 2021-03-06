@@ -149,3 +149,13 @@ def test_full_update_account(api_client, create_logged_user):
     account.refresh_from_db()
     assert account.name ==  payload['name']
     assert account.description == payload['description']
+
+
+@pytest.mark.django_db
+def test_list_transactions(api_client, create_logged_user, create_account):
+    """Show list of transactions for logged user """
+    user = create_logged_user
+    account = create_account
+    list_transactions_url = reverse('budget:transactions', args=(account.id,))
+    resp = api_client.get(list_transactions_url)
+    assert resp.status_code == 200
