@@ -26,24 +26,24 @@ class AccountViewSet(viewsets.GenericViewSet,
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-    
+
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)
 
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated,])
-@authentication_classes([TokenAuthentication,])
+@permission_classes([IsAuthenticated, ])
+@authentication_classes([TokenAuthentication, ])
 def transactions(request, pk=None):
     account = Account.objects.get(pk=pk)
     if request.user == account.user:
         if request.method == 'POST':
             data = request.data
             user = Transaction.objects.create(
-            amount=data['amount'], 
-            name=data['name'],
-            transaction_type=data['transaction_type'], 
-            account=account,
+                amount=data['amount'],
+                name=data['name'],
+                transaction_type=data['transaction_type'],
+                account=account,
                 )
             serializer = TransactionSerializer(user, many=False)
             return Response(serializer.data)

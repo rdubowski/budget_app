@@ -1,6 +1,7 @@
 import pytest
 from budget_app.serializers import AccountSerializer, TransactionSerializer
 
+
 @pytest.mark.django_db
 def test_valid_account_serializer(create_user):
     valid_serializer_data = {

@@ -13,6 +13,7 @@ class AccountSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'user', 'created_at', 'updated_at',
                             'deposit_sum', 'withdraw_sum', 'actual_balance']
 
+
 class TransactionSerializer(serializers.ModelSerializer):
     transaction_type = serializers.ChoiceField(Transaction.TRANSACTION_CHOICES)
 

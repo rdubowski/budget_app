@@ -9,6 +9,7 @@ import datetime
 def today():
     return datetime.date.today()
 
+
 @pytest.fixture(scope="function")
 def api_client():
     return APIClient()
@@ -46,6 +47,7 @@ def create_account(create_user):
     account = Account.objects.create(user=user, name='account1',
                                      description='Random description')
     return account
+
 
 @pytest.mark.django_db
 @pytest.fixture(scope="function")
