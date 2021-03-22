@@ -1,8 +1,9 @@
 import pytest
 from budget_app.models import Account, Transaction
 
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
+
 def test_create_account(create_user):
     user = create_user
     account = Account.objects.create(user=user, name='account1',
@@ -14,7 +15,7 @@ def test_create_account(create_user):
     assert str(Account.objects.get(name='account1')) == 'account1'
 
 
-@pytest.mark.django_db
+
 def test_create_transatction(create_user):
     user = create_user
     account = Account.objects.create(user=user, name='account1',
@@ -29,7 +30,7 @@ def test_create_transatction(create_user):
     assert Transaction.objects.get(name='transaction1').transaction_type == 'D'
 
 
-@pytest.mark.django_db
+
 def test_account_sum_functions_pos_and_neg(create_user,
                                            create_custom_transaction):
     user = create_user
@@ -52,7 +53,7 @@ def test_account_sum_functions_pos_and_neg(create_user,
     assert account.actual_balance() == 1300
 
 
-@pytest.mark.django_db
+
 def test_account_sum_functions_negative_only(create_user,
                                              create_custom_transaction):
     user = create_user
@@ -69,7 +70,7 @@ def test_account_sum_functions_negative_only(create_user,
     assert float(str(account.actual_balance())) == -2000.07
 
 
-@pytest.mark.django_db
+
 def test_account_sum_functions_positive_only(create_user,
                                              create_custom_transaction):
     user = create_user

@@ -5,16 +5,18 @@ from budget_app.models import Account, Transaction
 from budget_app.serializers import AccountSerializer, TransactionSerializer
 
 
+pytestmark = pytest.mark.django_db
+
 ACCOUNTS_URL = reverse('budget:account-list')
 
 
-@pytest.mark.django_db
+
 def test_login_required(api_client):
     resp = api_client.get(ACCOUNTS_URL)
     assert resp.status_code == 401
 
 
-@pytest.mark.django_db
+
 def test_retrieve_accounts(api_client, create_logged_user):
     user = create_logged_user
     account1 = Account.objects.create(user=user, name='account1',
@@ -28,7 +30,7 @@ def test_retrieve_accounts(api_client, create_logged_user):
     assert resp.data == serializer.data
 
 
-@pytest.mark.django_db
+
 def test_account_limited_to_user(api_client, create_logged_user):
     user_logged = create_logged_user
     user_not_logged = get_user_model().objects.create_user(
@@ -46,7 +48,7 @@ def test_account_limited_to_user(api_client, create_logged_user):
     assert resp.data[0]['user'] == user_logged.id
 
 
-@pytest.mark.django_db
+
 def test_create_account_successful(api_client, create_logged_user):
     user = create_logged_user
     payload = {'name': 'account1', 'description': 'Random description1'}
@@ -58,7 +60,7 @@ def test_create_account_successful(api_client, create_logged_user):
     assert exists
 
 
-@pytest.mark.django_db
+
 def test_create_account_invalid(api_client, create_logged_user):
     payload = {'name': ''}
     resp = api_client.post(ACCOUNTS_URL, payload)
@@ -66,7 +68,7 @@ def test_create_account_invalid(api_client, create_logged_user):
     assert resp.status_code == 400
 
 
-@pytest.mark.django_db
+
 def test_retrieve_account(api_client, create_logged_user):
     payload = {'name': 'account1', 'description': 'Random description1'}
     api_client.post(ACCOUNTS_URL, payload)
@@ -79,7 +81,7 @@ def test_retrieve_account(api_client, create_logged_user):
     assert payload['name'] == resp.data['name']
 
 
-@pytest.mark.django_db
+
 def test_retrieve_account_invalid_id(api_client, create_logged_user):
     payload = {'name': 'account1', 'description': 'Random description1'}
     api_client.post(ACCOUNTS_URL, payload)
@@ -88,7 +90,7 @@ def test_retrieve_account_invalid_id(api_client, create_logged_user):
     assert resp.status_code == 404
 
 
-@pytest.mark.django_db
+
 def test_delete_account_not_logged(api_client, create_logged_user):
     user = create_logged_user
     payload = {'name': 'account1', 'description': 'Random description1'}
@@ -102,7 +104,7 @@ def test_delete_account_not_logged(api_client, create_logged_user):
     assert resp.status_code == 401
 
 
-@pytest.mark.django_db
+
 def test_delete_account(api_client, create_logged_user):
     payload = {'name': 'account1', 'description': 'Random description1'}
     api_client.post(ACCOUNTS_URL, payload)
@@ -114,7 +116,7 @@ def test_delete_account(api_client, create_logged_user):
     assert resp.status_code == 204
 
 
-@pytest.mark.django_db
+
 def test_delete_account_invalid_id(api_client, create_logged_user):
     payload = {'name': 'account1', 'description': 'Random description1'}
     api_client.delete(ACCOUNTS_URL, payload)
@@ -123,7 +125,7 @@ def test_delete_account_invalid_id(api_client, create_logged_user):
     assert resp.status_code == 404
 
 
-@pytest.mark.django_db
+
 def test_partial_update_account(api_client, create_logged_user):
     user = create_logged_user
     account = Account.objects.create(user=user, name='account1',
@@ -136,7 +138,7 @@ def test_partial_update_account(api_client, create_logged_user):
     assert account.name == payload['name']
 
 
-@pytest.mark.django_db
+
 def test_full_update_account(api_client, create_logged_user):
     user = create_logged_user
     account = Account.objects.create(user=user, name='account1',
@@ -151,7 +153,7 @@ def test_full_update_account(api_client, create_logged_user):
     assert account.description == payload['description']
 
 
-@pytest.mark.django_db
+
 def test_list_transactions_not_logged(api_client, create_account):
     account = create_account
     list_transactions_url = reverse('budget:transactions', args=(account.id,))
@@ -159,7 +161,7 @@ def test_list_transactions_not_logged(api_client, create_account):
     assert resp.status_code == 401
 
 
-@pytest.mark.django_db
+
 def test_list_transactions_for_single_account(api_client,
                                               create_logged_user, 
                                               create_account,
@@ -181,7 +183,7 @@ def test_list_transactions_for_single_account(api_client,
     assert resp.data == serializer.data 
 
 
-@pytest.mark.django_db
+
 def test_list_transactions_seperate_accounts(api_client,
                                              create_logged_user,
                                              create_account,
@@ -206,7 +208,7 @@ def test_list_transactions_seperate_accounts(api_client,
     assert resp.data == serializer.data
 
 
-@pytest.mark.django_db
+
 def test_create_transaction_successful(api_client,
                                        create_logged_user,
                                        create_account):

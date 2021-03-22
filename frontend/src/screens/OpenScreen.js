@@ -1,9 +1,10 @@
-import React from 'react';
-import { Container, Row, Col, Image, Jumbotron, Button } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Row, Col, Image, Jumbotron, Button } from 'react-bootstrap';
+import axios from 'axios';
 
 function OpenScreen() {
 	return (
-		<Jumbotron>
+		<div>
 			<Row>
 				<Col md={4} />
 				<Col>
@@ -11,11 +12,18 @@ function OpenScreen() {
 				</Col>
 				<Col md={4} />
 			</Row>
-			<h1>Hello, world!</h1>
-			<p>
-				This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured
-				content or information.
-			</p>
+			<Row>
+				<Col md={4} />
+				<Col>
+					<h1 className="text-center">Your budget!!!</h1>
+					<p>
+						This is a simple app to manage your budget. To use it you have to register or if you registered
+						user, log in.
+					</p>
+				</Col>
+				<Col md={4} />
+			</Row>
+
 			<Row>
 				<Col md={4} />
 				<Col md={2} className="text-center">
@@ -26,7 +34,7 @@ function OpenScreen() {
 				</Col>
 				<Col md={4} />
 			</Row>
-		</Jumbotron>
+		</div>
 	);
 }
 
