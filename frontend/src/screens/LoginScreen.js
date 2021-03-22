@@ -7,7 +7,7 @@ import Message from '../components/Message';
 import FormContainer from '../components/FormContainer';
 import { login } from '../actions/userActions';
 
-function UserLoginScreen({ location, history }) {
+function LoginScreen({ location, history }) {
 	const [ email, setEmail ] = useState('');
 	const [ password, setPassword ] = useState('');
 	const dispatch = useDispatch();
@@ -66,4 +66,4 @@ function UserLoginScreen({ location, history }) {
 	);
 }
 
-export default UserLoginScreen;
+export default LoginScreen;
