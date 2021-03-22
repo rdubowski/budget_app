@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Image, Jumbotron, Button } from 'react-bootstrap';
 import axios from 'axios';
-
+import { Link } from 'react-router-dom';
 function OpenScreen() {
 	return (
 		<div>
@@ -27,10 +27,14 @@ function OpenScreen() {
 			<Row>
 				<Col md={4} />
 				<Col md={2} className="text-center">
-					<Button variant="secondary">Register</Button>
+					<Link to={'/register'}>
+						<Button variant="secondary">Register</Button>
+					</Link>
 				</Col>
 				<Col md={2} className="text-center">
-					<Button variant="secondary">Login</Button>
+					<Link to={'/login'}>
+						<Button variant="secondary">Login</Button>
+					</Link>
 				</Col>
 				<Col md={4} />
 			</Row>
