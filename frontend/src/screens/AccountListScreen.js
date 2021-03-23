@@ -68,7 +68,7 @@ function AccountListScreen({ history }) {
 								<th>BALANCE</th>
 								<th>NUMBER OF TRANSACTIONS</th>
 								<th>CREATED AT</th>
-								<th>UPDATE</th>
+								<th>TRACK YOU TRANSACTIONS</th>
 								<th>DELETE</th>
 							</tr>
 						</thead>
@@ -81,14 +81,14 @@ function AccountListScreen({ history }) {
 									<td>${account.actual_balance}</td>
 									<td>{account.transactions.length}</td>
 									<td>{account.created_at ? account.created_at.substring(0, 10) : ''}</td>
-									<td>
+									<td className="text-center">
 										<LinkContainer to={`/admin/book/${account.id}/edit`}>
-											<Button variant="light" className="btn-sm">
-												<i className="fas fa-edit" />
+											<Button size="lg" block variant="secondary" className="btn-sm">
+												ENTER
 											</Button>
 										</LinkContainer>
 									</td>
-									<td>
+									<td className="text-center">
 										<Button
 											variant="danger"
 											className="btn-sm"

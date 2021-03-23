@@ -10,7 +10,7 @@ import { ACCOUNT_ADD_RESET } from '../constants/accountConstants';
 function AccountAddScreen({ history }) {
 	const [ name, setName ] = useState('');
 	const [ description, setDescription ] = useState('');
-	const [ initBalance, setInitBalance ] = useState('');
+	const [ initBalance, setInitBalance ] = useState(0);
 
 	const dispatch = useDispatch();
 
@@ -45,7 +45,7 @@ function AccountAddScreen({ history }) {
 	};
 	return (
 		<FormContainer>
-			<h1>Sign in</h1>
+			<h1>Add account</h1>
 			{error && <Message variant="danger">{error}</Message>}
 			{loading && <Loader />}
 			<Form onSubmit={submitHandler}>
@@ -83,7 +83,7 @@ function AccountAddScreen({ history }) {
 			</Form>
 			<Row className="py-3">
 				<Col>
-					Back to your accounts <Link to="/accounts">Your Accounts</Link>
+					Back to <Link to="/accounts">Your Accounts</Link>
 				</Col>
 			</Row>
 		</FormContainer>
