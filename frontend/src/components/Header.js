@@ -34,7 +34,7 @@ function Header() {
 							{userInfo && (
 								<LinkContainer to="/accounts">
 									<Nav.Link>
-										<i className="fas fa-head" />Accounts
+										<i className="fas fa-credit-card" /> Accounts
 									</Nav.Link>
 								</LinkContainer>
 							)}

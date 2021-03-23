@@ -7,6 +7,7 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import AccountListScreen from './screens/AccountListScreen';
+import AccountAddScreen from './screens/AccountAddScreen';
 function App() {
 	return (
 		<Router>
@@ -17,7 +18,8 @@ function App() {
 					<Route path="/login" component={LoginScreen} />
 					<Route path="/register" component={RegisterScreen} />
 					<Route path="/profile" component={ProfileScreen} />
-					<Route path="/accounts" component={AccountListScreen} />
+					<Route path="/accounts" component={AccountListScreen} exact />
+					<Route path="/accounts/add/" component={AccountAddScreen} exact />
 				</Container>
 			</main>
 			<Footer />

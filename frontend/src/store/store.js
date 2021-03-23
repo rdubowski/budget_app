@@ -7,14 +7,16 @@ import {
 	userDetailsReducer,
 	userUpdateProfileReducer
 } from '../reducers/userReducers';
-import { accountReducer } from '../reducers/accountReducers';
+import { accountAddReducer, accountReducer, accountDeleteReducer } from '../reducers/accountReducers';
 
 const reducer = combineReducers({
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,
 	userDetails: userDetailsReducer,
 	userUpdateProfile: userUpdateProfileReducer,
-	accountList: accountReducer
+	accountList: accountReducer,
+	accountAdd: accountAddReducer,
+	accountDelete: accountDeleteReducer
 });
 
 const userInfofromStorage = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null;
