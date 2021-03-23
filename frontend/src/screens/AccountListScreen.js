@@ -65,8 +65,8 @@ function AccountListScreen({ history }) {
 								<th>NAME</th>
 								<th>DESCRIPTION</th>
 								<th>INITIAL BALANCE</th>
-								<th>BALANCE</th>
-								<th>NUMBER OF TRANSACTIONS</th>
+								<th>ACTUAL BALANCE</th>
+								<th>TRANSACTIONS</th>
 								<th>CREATED AT</th>
 								<th>TRACK YOU TRANSACTIONS</th>
 								<th>DELETE</th>
@@ -82,7 +82,7 @@ function AccountListScreen({ history }) {
 									<td>{account.transactions.length}</td>
 									<td>{account.created_at ? account.created_at.substring(0, 10) : ''}</td>
 									<td className="text-center">
-										<LinkContainer to={`/admin/book/${account.id}/edit`}>
+										<LinkContainer to={`/accounts/${account.id}/tracker`}>
 											<Button size="lg" block variant="secondary" className="btn-sm">
 												ENTER
 											</Button>

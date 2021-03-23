@@ -8,7 +8,10 @@ import {
 	ACCOUNT_ADD_REQUEST,
 	ACCOUNT_ADD_SUCCESS,
 	ACCOUNT_ADD_FAIL,
-	ACCOUNT_ADD_RESET
+	ACCOUNT_ADD_RESET,
+	ACCOUNT_DETAILS_REQUEST,
+	ACCOUNT_DETAILS_SUCCESS,
+	ACCOUNT_DETAILS_FAIL
 } from '../constants/accountConstants';
 
 import axios from 'axios';
@@ -24,7 +27,8 @@ export const listAccounts = () => async (dispatch, getState) => {
 				Authorization: `Token ${userInfo.token}`
 			}
 		};
-		const { data } = await axios.get('api/accounts/', config);
+
+		const { data } = await axios.get(`/api/accounts/`, config);
 
 		dispatch({
 			type: ACCOUNT_LIST_SUCCESS,
@@ -90,6 +94,34 @@ export const addAccount = (account) => async (dispatch, getState) => {
 	} catch (error) {
 		dispatch({
 			type: ACCOUNT_ADD_FAIL,
+			payload: error.response && error.response.data.detail ? error.response.data.detail : error.message
+		});
+	}
+};
+export const detailsAccount = (id) => async (dispatch, getState) => {
+	try {
+		dispatch({
+			type: ACCOUNT_DETAILS_REQUEST
+		});
+
+		const { userLogin: { userInfo } } = getState();
+
+		const config = {
+			headers: {
+				'Content-type': 'application/json',
+				Authorization: `Token ${userInfo.token}`
+			}
+		};
+
+		const { data } = await axios.get(`/api/accounts/${id}/`, config);
+
+		dispatch({
+			type: ACCOUNT_DETAILS_SUCCESS,
+			payload: data
+		});
+	} catch (error) {
+		dispatch({
+			type: ACCOUNT_DETAILS_FAIL,
 			payload: error.response && error.response.data.detail ? error.response.data.detail : error.message
 		});
 	}

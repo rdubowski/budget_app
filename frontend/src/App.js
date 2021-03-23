@@ -19,7 +19,7 @@ function App() {
 					<Route path="/login" component={LoginScreen} />
 					<Route path="/register" component={RegisterScreen} />
 					<Route path="/profile" component={ProfileScreen} />
-					<Route path="/accounts/tracker" component={TrackerScreen} />
+					<Route path="/accounts/:id/tracker" component={TrackerScreen} />
 					<Route path="/accounts" component={AccountListScreen} exact />
 					<Route path="/accounts/add" component={AccountAddScreen} exact />
 				</Container>

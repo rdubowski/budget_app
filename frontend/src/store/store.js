@@ -7,8 +7,13 @@ import {
 	userDetailsReducer,
 	userUpdateProfileReducer
 } from '../reducers/userReducers';
-import { accountAddReducer, accountReducer, accountDeleteReducer } from '../reducers/accountReducers';
-
+import {
+	accountAddReducer,
+	accountReducer,
+	accountDeleteReducer,
+	accountDetailsReducer
+} from '../reducers/accountReducers';
+import {transactionsListReducer} from '../reducers/transactionReducers'
 const reducer = combineReducers({
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,
@@ -16,7 +21,9 @@ const reducer = combineReducers({
 	userUpdateProfile: userUpdateProfileReducer,
 	accountList: accountReducer,
 	accountAdd: accountAddReducer,
-	accountDelete: accountDeleteReducer
+	accountDelete: accountDeleteReducer,
+	accountDetails: accountDetailsReducer,
+	transactionList: transactionsListReducer
 });
 
 const userInfofromStorage = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null;

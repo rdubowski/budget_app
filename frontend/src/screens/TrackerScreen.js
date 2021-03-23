@@ -5,112 +5,165 @@ import { Form, Button, Row, Col, Card, ListGroup } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-function Tracker() {
+import { LinkContainer } from 'react-router-bootstrap';
+import { detailsAccount } from '../actions/accountActions';
+import { listTransactions } from '../actions/transactionActions';
+function Tracker({ match, history }) {
+	const accountId = match.params.id;
 	const [ name, setName ] = useState('');
 	const [ amount, setAmount ] = useState(0);
 	const [ typeOfTransaction, setTypeOfTransaction ] = useState('');
+	const dispatch = useDispatch();
+
+	const accountDetails = useSelector((state) => state.accountDetails);
+	const { error, loading, account } = accountDetails;
+
+	const transactionList = useSelector((state) => state.transactionList);
+	const { error: errorTransaction, loading: loadingTransaction, transactions } = transactionList;
+
+	const userLogin = useSelector((state) => state.userLogin);
+	const { userInfo } = userLogin;
+
 	const submitHandler = () => console.log('submit');
+
+	useEffect(
+		() => {
+			if (!userInfo) {
+				history.push('/login');
+			} else {
+				dispatch(detailsAccount(accountId));
+				dispatch(listTransactions(accountId));
+			}
+		},
+		[ dispatch, history ]
+	);
 	return (
-		<Row>
-			<Col md={4}>
-				<FormContainer>
-					<h2 className="text-center">Add Transaction</h2>
-					<Form onSubmit={submitHandler}>
-						<Form.Group controlId="name">
-							<Form.Label>Name of Transaction</Form.Label>
-							<Form.Control
-								required
-								type="name"
-								placeholder="Enter name"
-								value={name}
-								onChange={(e) => setName(e.target.value)}
-							/>
-						</Form.Group>
-						<Form.Group controlId="amount">
-							<Form.Label>Amount of transaction</Form.Label>
-							<Form.Control
-								type="number"
-								placeholder="Enter amount"
-								value={amount}
-								onChange={(e) => setAmount(e.target.value)}
-							/>
-						</Form.Group>
-						<Form.Group>
-							<Form.Label className="text-center" as="legend">
-								Select type of transaction
-							</Form.Label>
-							<Col>
-								<Form.Check
-									type="radio"
-									label="Withdraw"
-									id="withdraw"
-									name="transactionType"
-									onChange={(e) => setTypeOfTransaction(e.target.value)}
-								/>
-								<Form.Check
-									type="radio"
-									label="Deposit"
-									id="transaction"
-									name="transactionType"
-									onChange={(e) => setTypeOfTransaction(e.target.value)}
-								/>
+		<div>
+			{loading ? (
+				<Loader />
+			) : error ? (
+				<Message variant="danger">{error}</Message>
+			) : (
+				<Row>
+					<Col md={4}>
+						<FormContainer>
+							<h2 className="text-center">Add Transaction</h2>
+							<Form onSubmit={submitHandler}>
+								<Form.Group controlId="name">
+									<Form.Label>Name of Transaction</Form.Label>
+									<Form.Control
+										required
+										type="name"
+										placeholder="Enter name"
+										value={name}
+										onChange={(e) => setName(e.target.value)}
+									/>
+								</Form.Group>
+								<Form.Group controlId="amount">
+									<Form.Label>Amount of transaction</Form.Label>
+									<Form.Control
+										type="number"
+										placeholder="Enter amount"
+										value={amount}
+										onChange={(e) => setAmount(e.target.value)}
+									/>
+								</Form.Group>
+								<Form.Group>
+									<Form.Label className="text-center" as="legend">
+										Select type of transaction
+									</Form.Label>
+									<Col>
+										<Form.Check
+											type="radio"
+											label="Withdraw"
+											id="withdraw"
+											name="transactionType"
+											onChange={(e) => setTypeOfTransaction(e.target.value)}
+										/>
+										<Form.Check
+											type="radio"
+											label="Deposit"
+											id="transaction"
+											name="transactionType"
+											onChange={(e) => setTypeOfTransaction(e.target.value)}
+										/>
+									</Col>
+								</Form.Group>
+								<Button block type="submit" variant="primary">
+									Add Transaction
+								</Button>
+							</Form>
+							<Row className="py-3">
+								<Col>
+									Back to <Link to="/accounts">Your Accounts</Link>
+								</Col>
+							</Row>
+						</FormContainer>
+					</Col>
+					<Col md={8}>
+						<Row>
+							<Col className="text-center" md={12}>
+								<h1>Your Actual Budget</h1>
+								<h2>${account.actual_balance}</h2>
 							</Col>
-						</Form.Group>
-						<Button block type="submit" variant="primary">
-							Add Transaction
-						</Button>
-					</Form>
-					<Row className="py-3">
-						<Col>
-							Back to <Link to="/accounts">Your Accounts</Link>
-						</Col>
-					</Row>
-				</FormContainer>
-			</Col>
-			<Col md={8}>
-				<Row>
-					<Col className="text-center" md={12}>
-						<h1>Your Actual Budget</h1>
-						<h2>$550</h2>
+						</Row>
+						<Row>
+							<Col md={4} />
+							<Col md={2} className="text-center">
+								<h2>Your expenses</h2>
+								<h2>${account.withdraw_sum}</h2>
+							</Col>
+							<Col md={2} className="text-center">
+								<h2>Your deposit</h2>
+								<h2>${account.deposit_sum}</h2>
+							</Col>
+							<Col md={4} />
+						</Row>
+						<Row>
+							<Col md={12}>
+								<h2 className="text-center">Your Transactions</h2>
+							</Col>
+						</Row>
+						<Row>
+							<Col md={12}>
+								<Card>
+									<ListGroup>
+										<ListGroup.Item>
+											<Row>
+												<Col md={6}>Title of transaction</Col>
+												<Col md={1} />
+												<Col className="text-center" md={2}>
+													Amount
+												</Col>
+												<Col className="text-center" md={2}>
+													Delete
+												</Col>
+												<Col md={1} />
+											</Row>
+										</ListGroup.Item>
+										{transactions.map((transaction) => (
+											<ListGroup.Item key={transaction.id}>
+												<Row>
+													<Col md={6}>{transaction.name}</Col>
+													<Col md={1} />
+													<Col className="text-center" md={2}>
+														{transaction.amount}
+													</Col>
+													<Col className="text-center" md={2}>
+														Delete
+													</Col>
+													<Col md={1} />
+												</Row>
+											</ListGroup.Item>
+										))}
+									</ListGroup>
+								</Card>
+							</Col>
+						</Row>
 					</Col>
 				</Row>
-				<Row>
-					<Col md={4} />
-					<Col md={2} className="text-center">
-						<h2>Your expenses</h2>
-						<h2>$200</h2>
-					</Col>
-					<Col md={2} className="text-center">
-						<h2>Your income</h2>
-						<h2>$1000</h2>
-					</Col>
-					<Col md={4} />
-				</Row>
-				<Row>
-					<Col md={12}>
-						<Card>
-							<ListGroup>
-								<ListGroup.Item>
-									<Row>
-										<Col md={6}>Tresc naszej transakcji</Col>
-										<Col md={1} />
-										<Col className="text-center" md={2}>
-											delete
-										</Col>
-										<Col className="text-center" md={2}>
-											100$
-										</Col>
-										<Col md={1} />
-									</Row>
-								</ListGroup.Item>
-								<ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-								<ListGroup.Item>Vestibulum at eros</ListGroup.Item>
-							</ListGroup>
-						</Card>
-					</Col>
-				</Row>
-			</Col>
-		</Row>
+			)}
+		</div>
 	);
 }
 
