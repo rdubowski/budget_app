@@ -3,7 +3,7 @@ import { Form, Button, Row, Col, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { getUserDetails } from '../actions/userActions';
+import { getUserDetails, updateUserProfile } from '../actions/userActions';
 import FormContainer from '../components/FormContainer';
 import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants';
 
@@ -22,12 +22,18 @@ function ProfileScreen({ history }) {
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
 
+	const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
+	const { success } = userUpdateProfile;
+
 	useEffect(
 		() => {
 			if (!userInfo) {
 				history.push('/login');
 			} else {
-				if (!user || !user.name) {
+				if (!user || !user.name || success || userInfo.id !== user._id) {
+					dispatch({ type: USER_UPDATE_PROFILE_RESET });
+					setPassword('');
+					setConfirmPassword('');
 					dispatch(getUserDetails());
 				} else {
 					setName(user.name);
@@ -35,7 +41,7 @@ function ProfileScreen({ history }) {
 				}
 			}
 		},
-		[ history, userInfo, dispatch, user ]
+		[ history, userInfo, user, success ]
 	);
 
 	const submitHandler = (e) => {
@@ -43,21 +49,21 @@ function ProfileScreen({ history }) {
 		if (password !== confirmPassword) {
 			setMessage('Passwords do not match');
 		} else {
-			console.log('update');
+			dispatch(
+				updateUserProfile({
+					name: name,
+					email: email,
+					password: password
+				})
+			);
+			setMessage('Success');
 		}
-		//     dispatch(updateUserProfile({
-		//         'id': user._id,
-		//         'name': name,
-		//         'email': email,
-		//         'password': password,
-		//     }))
-		//     setMessage('')
 	};
 
 	return (
 		<FormContainer>
 			<h2>User Profile</h2>
-			{message && <Message variant="danger">{message}</Message>}
+			{message && <Message variant="primary">{message}</Message>}
 			{error && <Message variant="danger">{error}</Message>}
 			{loading && <Loader />}
 			<Form onSubmit={submitHandler}>
