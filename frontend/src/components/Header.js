@@ -31,6 +31,13 @@ function Header() {
 									</Nav.Link>
 								</LinkContainer>
 							)}
+							{userInfo && (
+								<LinkContainer to="/accounts">
+									<Nav.Link>
+										<i className="fas fa-head" />Accounts
+									</Nav.Link>
+								</LinkContainer>
+							)}
 							{userInfo ? (
 								<NavDropdown id={userInfo.name} title={userInfo.name}>
 									<LinkContainer to="/profile">

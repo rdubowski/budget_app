@@ -6,6 +6,7 @@ import OpenScreen from './screens/OpenScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import AccountListScreen from './screens/AccountListScreen';
 function App() {
 	return (
 		<Router>
@@ -16,6 +17,7 @@ function App() {
 					<Route path="/login" component={LoginScreen} />
 					<Route path="/register" component={RegisterScreen} />
 					<Route path="/profile" component={ProfileScreen} />
+					<Route path="/accounts" component={AccountListScreen} />
 				</Container>
 			</main>
 			<Footer />
