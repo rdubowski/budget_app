@@ -7,7 +7,8 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import { LinkContainer } from 'react-router-bootstrap';
 import { detailsAccount } from '../actions/accountActions';
-import { listTransactions } from '../actions/transactionActions';
+import { listTransactions, addTransaction } from '../actions/transactionActions';
+import { TRANSACTION_ADD_RESET } from '../constants/transactionConstants';
 function Tracker({ match, history }) {
 	const accountId = match.params.id;
 	const [ name, setName ] = useState('');
@@ -19,24 +20,36 @@ function Tracker({ match, history }) {
 	const { error, loading, account } = accountDetails;
 
 	const transactionList = useSelector((state) => state.transactionList);
-	const { error: errorTransaction, loading: loadingTransaction, transactions } = transactionList;
+	const { error: errorListTransaction, loading: loadingListTransaction, transactions } = transactionList;
+
+	const transactionAdd = useSelector((state) => state.transactionAdd);
+	const { error: errorAddTransaction, loading: loadingAddTransaction, success } = transactionAdd;
 
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
-
-	const submitHandler = () => console.log('submit');
 
 	useEffect(
 		() => {
 			if (!userInfo) {
 				history.push('/login');
 			} else {
+				dispatch({ type: TRANSACTION_ADD_RESET });
 				dispatch(detailsAccount(accountId));
 				dispatch(listTransactions(accountId));
 			}
 		},
-		[ dispatch, history, userInfo ]
+		[ dispatch, history, userInfo, success ]
 	);
+	const submitHandler = (e) => {
+		e.preventDefault();
+		dispatch(
+			addTransaction(accountId, {
+				name,
+				amount,
+				transaction_type: typeOfTransaction
+			})
+		);
+	};
 	return (
 		<div>
 			{loading ? (
@@ -46,64 +59,72 @@ function Tracker({ match, history }) {
 			) : (
 				<Row>
 					<Col md={4}>
-						<FormContainer>
-							<h2 className="text-center">Add Transaction</h2>
-							<Form onSubmit={submitHandler}>
-								<Form.Group controlId="name">
-									<Form.Label>Name of Transaction</Form.Label>
-									<Form.Control
-										required
-										type="name"
-										placeholder="Enter name"
-										value={name}
-										onChange={(e) => setName(e.target.value)}
-									/>
-								</Form.Group>
-								<Form.Group controlId="amount">
-									<Form.Label>Amount of transaction</Form.Label>
-									<Form.Control
-										type="number"
-										placeholder="Enter amount"
-										value={amount}
-										onChange={(e) => setAmount(e.target.value)}
-									/>
-								</Form.Group>
-								<Form.Group>
-									<Form.Label className="text-center" as="legend">
-										Select type of transaction
-									</Form.Label>
+						{loadingAddTransaction ? (
+							<Loader />
+						) : errorAddTransaction ? (
+							<Message variant="danger">{errorAddTransaction}</Message>
+						) : (
+							<FormContainer>
+								<h2 className="text-center">Add Transaction</h2>
+								<Form onSubmit={submitHandler}>
+									<Form.Group controlId="name">
+										<Form.Label>Name of Transaction</Form.Label>
+										<Form.Control
+											required
+											type="name"
+											placeholder="Enter name"
+											value={name}
+											onChange={(e) => setName(e.target.value)}
+										/>
+									</Form.Group>
+									<Form.Group controlId="amount">
+										<Form.Label>Amount of transaction</Form.Label>
+										<Form.Control
+											type="number"
+											placeholder="Enter amount"
+											value={amount}
+											onChange={(e) => setAmount(e.target.value)}
+										/>
+									</Form.Group>
+									<Form.Group>
+										<Form.Label className="text-center" as="legend">
+											Select type of transaction
+										</Form.Label>
+										<Col>
+											<Form.Check
+												type="radio"
+												label="withdraw"
+												id="withdraw"
+												value="W"
+												name="transactionType"
+												required
+												checked={typeOfTransaction === 'W'}
+												onChange={(e) => setTypeOfTransaction(e.target.value)}
+											/>
+											<Form.Check
+												type="radio"
+												label="deposit"
+												value="D"
+												id="transaction"
+												name="transactionType"
+												required
+												checked={typeOfTransaction === 'D'}
+												onChange={(e) => setTypeOfTransaction(e.target.value)}
+											/>
+										</Col>
+									</Form.Group>
+									<Button block type="submit" variant="primary">
+										{typeOfTransaction}
+										Add Transaction
+									</Button>
+								</Form>
+								<Row className="py-3">
 									<Col>
-										<Form.Check
-											type="radio"
-											label="withdraw"
-											id="withdraw"
-											value="W"
-											name="transactionType"
-											checked={typeOfTransaction === 'W'}
-											onChange={(e) => setTypeOfTransaction(e.target.value)}
-										/>
-										<Form.Check
-											type="radio"
-											label="deposit"
-											value="D"
-											id="transaction"
-											name="transactionType"
-											checked={typeOfTransaction === 'D'}
-											onChange={(e) => setTypeOfTransaction(e.target.value)}
-										/>
+										Back to <Link to="/accounts">Your Accounts</Link>
 									</Col>
-								</Form.Group>
-								<Button block type="submit" variant="primary">
-									{typeOfTransaction}
-									Add Transaction
-								</Button>
-							</Form>
-							<Row className="py-3">
-								<Col>
-									Back to <Link to="/accounts">Your Accounts</Link>
-								</Col>
-							</Row>
-						</FormContainer>
+								</Row>
+							</FormContainer>
+						)}
 					</Col>
 					<Col md={8}>
 						<Row>
@@ -129,10 +150,10 @@ function Tracker({ match, history }) {
 								<h2 className="text-center">Your Transactions</h2>
 							</Col>
 						</Row>
-						{loadingTransaction ? (
+						{loadingListTransaction ? (
 							<Loader />
-						) : errorTransaction ? (
-							<Message variant="danger">{error}</Message>
+						) : errorListTransaction ? (
+							<Message variant="danger">{errorListTransaction}</Message>
 						) : (
 							<Row>
 								<Col md={12}>
