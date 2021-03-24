@@ -35,7 +35,7 @@ function Tracker({ match, history }) {
 				dispatch(listTransactions(accountId));
 			}
 		},
-		[ dispatch, history ]
+		[ dispatch, history, userInfo ]
 	);
 	return (
 		<div>
@@ -75,21 +75,26 @@ function Tracker({ match, history }) {
 									<Col>
 										<Form.Check
 											type="radio"
-											label="Withdraw"
+											label="withdraw"
 											id="withdraw"
+											value="W"
 											name="transactionType"
+											checked={typeOfTransaction === 'W'}
 											onChange={(e) => setTypeOfTransaction(e.target.value)}
 										/>
 										<Form.Check
 											type="radio"
-											label="Deposit"
+											label="deposit"
+											value="D"
 											id="transaction"
 											name="transactionType"
+											checked={typeOfTransaction === 'D'}
 											onChange={(e) => setTypeOfTransaction(e.target.value)}
 										/>
 									</Col>
 								</Form.Group>
 								<Button block type="submit" variant="primary">
+									{typeOfTransaction}
 									Add Transaction
 								</Button>
 							</Form>
@@ -124,30 +129,21 @@ function Tracker({ match, history }) {
 								<h2 className="text-center">Your Transactions</h2>
 							</Col>
 						</Row>
-						<Row>
-							<Col md={12}>
-								<Card>
-									<ListGroup>
-										<ListGroup.Item>
-											<Row>
-												<Col md={6}>Title of transaction</Col>
-												<Col md={1} />
-												<Col className="text-center" md={2}>
-													Amount
-												</Col>
-												<Col className="text-center" md={2}>
-													Delete
-												</Col>
-												<Col md={1} />
-											</Row>
-										</ListGroup.Item>
-										{transactions.map((transaction) => (
-											<ListGroup.Item key={transaction.id}>
+						{loadingTransaction ? (
+							<Loader />
+						) : errorTransaction ? (
+							<Message variant="danger">{error}</Message>
+						) : (
+							<Row>
+								<Col md={12}>
+									<Card>
+										<ListGroup>
+											<ListGroup.Item>
 												<Row>
-													<Col md={6}>{transaction.name}</Col>
+													<Col md={6}>Title of transaction</Col>
 													<Col md={1} />
 													<Col className="text-center" md={2}>
-														{transaction.amount}
+														Amount
 													</Col>
 													<Col className="text-center" md={2}>
 														Delete
@@ -155,11 +151,35 @@ function Tracker({ match, history }) {
 													<Col md={1} />
 												</Row>
 											</ListGroup.Item>
-										))}
-									</ListGroup>
-								</Card>
-							</Col>
-						</Row>
+											{transactions.map((transaction) => (
+												<ListGroup.Item
+													style={
+														transaction.transaction_type === 'W' ? (
+															{ color: 'white', background: 'red' }
+														) : (
+															{ color: 'white', background: 'green' }
+														)
+													}
+													key={transaction.id}
+												>
+													<Row>
+														<Col md={6}>{transaction.name}</Col>
+														<Col md={1} />
+														<Col className="text-center" md={2}>
+															{transaction.amount}
+														</Col>
+														<Col className="text-center" md={2}>
+															Delete
+														</Col>
+														<Col md={1} />
+													</Row>
+												</ListGroup.Item>
+											))}
+										</ListGroup>
+									</Card>
+								</Col>
+							</Row>
+						)}
 					</Col>
 				</Row>
 			)}
