@@ -10,13 +10,7 @@ app_name = 'budget'
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('accounts/<int:pk>/transactions/', views.transaction_list_post,
-         name='transactions'),
-    # path('transactions/<int:pk>/delete/', views.transaction_delete, name="transaction_delete"),
-    path('transactions/<int:pk>/', views.transaction_single.as_view(), name="transaction_get"),
     path('transactions/<int:pk>/delete/', views.transaction_delete.as_view(), name="transaction_delete"),
-    path('account/<int:id>/transactions/', views.transaction_list.as_view(),
-         name='transactionss'),
-    #path('accountss/<int:id>/transactions/add/' views.transaction_list.as_view(),
-         #name='transactionss'),
+    path('accounts/<int:id>/transactions/', views.transaction_list.as_view(),
+         name='transactions'),
 ]
