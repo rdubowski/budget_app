@@ -6,18 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('budget_app', '0002_auto_20210304_1712'),
+        ("budget_app", "0002_auto_20210304_1712"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='account',
-            old_name='desription',
-            new_name='description',
+            model_name="account",
+            old_name="desription",
+            new_name="description",
         ),
         migrations.AlterField(
-            model_name='account',
-            name='balance',
-            field=models.DecimalField(blank=True, decimal_places=2, default=0, max_digits=15, null=True),
+            model_name="account",
+            name="balance",
+            field=models.DecimalField(
+                blank=True,
+                decimal_places=2,
+                default=0,
+                max_digits=15,
+                null=True,
+            ),
         ),
     ]

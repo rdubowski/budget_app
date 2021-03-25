@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from .models import Account, Transaction
 
 
@@ -7,11 +8,28 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ('id', 'user', 'name', 'description','init_balance',
-                  'transactions', 'created_at', 'updated_at',
-                  'deposit_sum', 'withdraw_sum', 'actual_balance')
-        read_only_fields = ['id', 'user', 'created_at', 'updated_at',
-                            'deposit_sum', 'withdraw_sum', 'actual_balance']
+        fields = (
+            "id",
+            "user",
+            "name",
+            "description",
+            "init_balance",
+            "transactions",
+            "created_at",
+            "updated_at",
+            "deposit_sum",
+            "withdraw_sum",
+            "actual_balance",
+        )
+        read_only_fields = [
+            "id",
+            "user",
+            "created_at",
+            "updated_at",
+            "deposit_sum",
+            "withdraw_sum",
+            "actual_balance",
+        ]
 
 
 class TransactionSerializer(serializers.ModelSerializer):
@@ -19,6 +37,12 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ('amount', 'name', 'transaction_type',
-                  'account', 'created_at', 'id')
+        fields = (
+            "amount",
+            "name",
+            "transaction_type",
+            "account",
+            "created_at",
+            "id",
+        )
         # read_only_fields = ['account']

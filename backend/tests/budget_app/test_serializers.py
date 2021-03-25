@@ -1,4 +1,5 @@
 import pytest
+
 from budget_app.serializers import AccountSerializer, TransactionSerializer
 
 
@@ -15,8 +16,7 @@ def test_valid_account_serializer(create_user):
 
 @pytest.mark.django_db
 def test_invalid_account_serializer(create_user):
-    invalid_serializer_data = {
-    }
+    invalid_serializer_data = {}
     serializer = AccountSerializer(data=invalid_serializer_data)
     assert not serializer.is_valid()
     assert serializer.validated_data == {}
@@ -30,7 +30,7 @@ def test_valid_transaction_serializer(create_account):
         "account": f"{create_account.id}",
         "name": "testrans",
         "amount": 50,
-        "transaction_type": "D"
+        "transaction_type": "D",
     }
     serializer = TransactionSerializer(data=valid_serializer_data)
     assert serializer.is_valid()

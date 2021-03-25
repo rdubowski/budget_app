@@ -1,10 +1,11 @@
-from rest_framework import generics, authentication, permissions
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.settings import api_settings
-from user.serializers import UserSerializer, AuthTokenSerializer
+from rest_framework import authentication, generics, permissions
 from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.settings import api_settings
+
+from user.serializers import AuthTokenSerializer, UserSerializer
+
 
 class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
@@ -14,27 +15,29 @@ class CreateUserView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         token, created = Token.objects.get_or_create(user=serializer.instance)
-        return Response({
-            'token': token.key,
-            'name': serializer.instance.name,
-            'email': serializer.instance.email
-        })
+        return Response(
+            {
+                "token": token.key,
+                "name": serializer.instance.name,
+                "email": serializer.instance.email,
+            }
+        )
 
 
 class CreateTokenView(ObtainAuthToken):
     serializer_class = AuthTokenSerializer
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data,
-                                            context={'request': request})
+        serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
+        user = serializer.validated_data["user"]
         token, created = Token.objects.get_or_create(user=user)
-        return Response({
-            'token': token.key,
-            'name': user.name,
-            'email': user.email
-        })
+        return Response(
+            {"token": token.key, "name": user.name, "email": user.email}
+        )
 
 
 class ManageUserView(generics.RetrieveUpdateAPIView):
@@ -46,17 +49,21 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
     def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
+        partial = kwargs.pop("partial", False)
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=partial
+        )
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-        if getattr(instance, '_prefetched_objects_cache', None):
+        if getattr(instance, "_prefetched_objects_cache", None):
             instance._prefetched_objects_cache = {}
-        
+
         token, created = Token.objects.get_or_create(user=serializer.instance)
-        return Response({
-            'token': token.key,
-            'name': serializer.instance.name,
-            'email': serializer.instance.email
-        })
+        return Response(
+            {
+                "token": token.key,
+                "name": serializer.instance.name,
+                "email": serializer.instance.email,
+            }
+        )
