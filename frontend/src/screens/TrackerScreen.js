@@ -77,7 +77,7 @@ function Tracker({ match, history }) {
 								<h2 className="text-center">Add Transaction</h2>
 								<Form onSubmit={submitHandler}>
 									<Form.Group controlId="name">
-										<Form.Label>Name of Transaction</Form.Label>
+										<Form.Label className="text-center">Name of Transaction</Form.Label>
 										<Form.Control
 											required
 											type="name"
@@ -87,7 +87,7 @@ function Tracker({ match, history }) {
 										/>
 									</Form.Group>
 									<Form.Group controlId="amount">
-										<Form.Label>Amount of transaction</Form.Label>
+										<Form.Label className="text-center">Amount of transaction</Form.Label>
 										<Form.Control
 											type="number"
 											placeholder="Enter amount"
@@ -97,7 +97,7 @@ function Tracker({ match, history }) {
 									</Form.Group>
 									<Form.Group>
 										<Form.Label className="text-center" as="legend">
-											Select type of transaction
+											Type of transaction
 										</Form.Label>
 										<Col>
 											<Form.Check
@@ -137,25 +137,29 @@ function Tracker({ match, history }) {
 					<Col md={8}>
 						<Row>
 							<Col className="text-center" md={12}>
-								<h1>Your Actual Budget</h1>
-								<h2>${account.actual_balance}</h2>
+								<h1 className="pb-0">Your Actual Budget</h1>
+								<h1 className="py-0">${account.actual_balance}</h1>
+								<p>
+									Initial Budget
+									<p>${parseFloat(account.init_balance)}</p>
+								</p>
 							</Col>
 						</Row>
 						<Row>
 							<Col md={4} />
 							<Col md={2} className="text-center">
-								<h2>Your expenses</h2>
-								<h2>${account.withdraw_sum}</h2>
+								<h2 className="pb-0">Your expenses</h2>
+								<h2 className="py-0">${account.withdraw_sum}</h2>
 							</Col>
 							<Col md={2} className="text-center">
-								<h2>Your deposit</h2>
-								<h2>${account.deposit_sum}</h2>
+								<h2 className="pb-0">Your deposit</h2>
+								<h2 className="py-0">${account.deposit_sum}</h2>
 							</Col>
 							<Col md={4} />
 						</Row>
 						<Row>
 							<Col md={12}>
-								<h2 className="text-center">Your Transactions</h2>
+								<h2 className="text-center py-3">Your Transactions</h2>
 							</Col>
 						</Row>
 						{loadingListTransaction ? (
@@ -199,11 +203,21 @@ function Tracker({ match, history }) {
 														<Col md={6}>{transaction.name}</Col>
 														<Col md={1} />
 														<Col className="text-center" md={2}>
-															{transaction.amount}
+															{transaction.transaction_type === 'D' ? (
+																`$${transaction.amount}`
+															) : (
+																`-$${transaction.amount}`
+															)}
 														</Col>
 														<Col className="text-center" md={2}>
 															<Button
-																// variant="danger"
+																style={
+																	transaction.transaction_type === 'W' ? (
+																		{ background: 'red', border: 'red' }
+																	) : (
+																		{ background: 'green', border: 'green' }
+																	)
+																}
 																className="btn-sm"
 																onClick={() => deleteHandler(transaction.id)}
 															>

@@ -74,7 +74,7 @@ function AccountListScreen({ history }) {
 								<tr key={account.id}>
 									<td>{account.name}</td>
 									<td>{account.description ? `${account.description.substring(0, 15)}...` : ''}</td>
-									<td>${account.init_balance}</td>
+									<td>${parseFloat(account.init_balance)}</td>
 									<td>${account.actual_balance}</td>
 									<td>{account.transactions.length}</td>
 									<td>{account.created_at ? account.created_at.substring(0, 10) : ''}</td>

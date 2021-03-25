@@ -45,7 +45,7 @@ function AccountAddScreen({ history }) {
 	};
 	return (
 		<FormContainer>
-			<h1>Add account</h1>
+			<h1 className="text-center">Add account</h1>
 			{error && <Message variant="danger">{error}</Message>}
 			{loading && <Loader />}
 			<Form onSubmit={submitHandler}>
