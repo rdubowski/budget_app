@@ -39,7 +39,7 @@ function AccountAddScreen({ history }) {
 			addAccount({
 				name,
 				description,
-				initBalance
+				init_balance: initBalance
 			})
 		);
 	};
