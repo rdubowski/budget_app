@@ -49,11 +49,13 @@ export const transactionAddReducer = (state = { transaction: {} }, action) => {
 		case TRANSACTION_ADD_REQUEST:
 			return { loading: true };
 		case TRANSACTION_ADD_SUCCESS:
-			return { loading: false, success: true, TRANSACTION: action.payload };
+			return { loading: false, success: true, transaction: action.payload };
 		case TRANSACTION_ADD_FAIL:
 			return { loading: false, error: action.payload };
 		case TRANSACTION_ADD_RESET:
-			return {};
+			return {
+				transaction: {}
+			};
 		default:
 			return state;
 	}

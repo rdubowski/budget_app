@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Account, Transaction
 from .serializers import AccountSerializer, TransactionSerializer
-from .permissions import IsOwnerTransaction, IsOwnerOfAccount
+from .permissions import IsOwnerTransaction
 
 
 class AccountViewSet(viewsets.GenericViewSet,

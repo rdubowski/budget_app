@@ -33,9 +33,6 @@ function AccountListScreen({ history }) {
 			dispatch(deleteAccount(id));
 		}
 	};
-	const addAccountHandler = (account) => {
-		console.log('addAccount()');
-	};
 	return (
 		<div>
 			<Row className="align-items-center">

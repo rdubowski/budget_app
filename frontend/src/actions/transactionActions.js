@@ -66,3 +66,31 @@ export const addTransaction = (accountId, transaction) => async (dispatch, getSt
 		});
 	}
 };
+
+export const deleteTransaction = (transactionId) => async (dispatch, getState) => {
+	try {
+		dispatch({
+			type: TRANSACTION_DELETE_REQUEST
+		});
+
+		const { userLogin: { userInfo } } = getState();
+
+		const config = {
+			headers: {
+				'Content-type': 'application/json',
+				Authorization: `Token ${userInfo.token}`
+			}
+		};
+
+		const { data } = await axios.delete(`/api/transactions/${transactionId}/delete/`, config);
+
+		dispatch({
+			type: TRANSACTION_DELETE_SUCCESS
+		});
+	} catch (error) {
+		dispatch({
+			type: TRANSACTION_DELETE_FAIL,
+			payload: error.response && error.response.data.detail ? error.response.data.detail : error.message
+		});
+	}
+};

@@ -7,7 +7,7 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import { LinkContainer } from 'react-router-bootstrap';
 import { detailsAccount } from '../actions/accountActions';
-import { listTransactions, addTransaction } from '../actions/transactionActions';
+import { listTransactions, addTransaction, deleteTransaction } from '../actions/transactionActions';
 import { TRANSACTION_ADD_RESET } from '../constants/transactionConstants';
 function Tracker({ match, history }) {
 	const accountId = match.params.id;
@@ -16,6 +16,8 @@ function Tracker({ match, history }) {
 	const [ typeOfTransaction, setTypeOfTransaction ] = useState('');
 	const dispatch = useDispatch();
 
+	const userLogin = useSelector((state) => state.userLogin);
+	const { userInfo } = userLogin;
 	const accountDetails = useSelector((state) => state.accountDetails);
 	const { error, loading, account } = accountDetails;
 
@@ -25,8 +27,8 @@ function Tracker({ match, history }) {
 	const transactionAdd = useSelector((state) => state.transactionAdd);
 	const { error: errorAddTransaction, loading: loadingAddTransaction, success } = transactionAdd;
 
-	const userLogin = useSelector((state) => state.userLogin);
-	const { userInfo } = userLogin;
+	const transactionDelete = useSelector((state) => state.transactionDelete);
+	const { loading: loadingDelete, error: errorDelete, success: successDelete } = transactionDelete;
 
 	useEffect(
 		() => {
@@ -34,11 +36,14 @@ function Tracker({ match, history }) {
 				history.push('/login');
 			} else {
 				dispatch({ type: TRANSACTION_ADD_RESET });
+				setName('');
+				setAmount('');
+				setTypeOfTransaction('');
 				dispatch(detailsAccount(accountId));
 				dispatch(listTransactions(accountId));
 			}
 		},
-		[ dispatch, history, userInfo, success ]
+		[ dispatch, history, userInfo, success, successDelete ]
 	);
 	const submitHandler = (e) => {
 		e.preventDefault();
@@ -49,6 +54,11 @@ function Tracker({ match, history }) {
 				transaction_type: typeOfTransaction
 			})
 		);
+	};
+	const deleteHandler = (transactionId) => {
+		if (window.confirm('Are you sure that you want to delete this account?')) {
+			dispatch(deleteTransaction(transactionId));
+		}
 	};
 	return (
 		<div>
@@ -61,10 +71,9 @@ function Tracker({ match, history }) {
 					<Col md={4}>
 						{loadingAddTransaction ? (
 							<Loader />
-						) : errorAddTransaction ? (
-							<Message variant="danger">{errorAddTransaction}</Message>
 						) : (
 							<FormContainer>
+								{errorAddTransaction && <Message variant="danger">{errorAddTransaction}</Message>}
 								<h2 className="text-center">Add Transaction</h2>
 								<Form onSubmit={submitHandler}>
 									<Form.Group controlId="name">
@@ -114,7 +123,6 @@ function Tracker({ match, history }) {
 										</Col>
 									</Form.Group>
 									<Button block type="submit" variant="primary">
-										{typeOfTransaction}
 										Add Transaction
 									</Button>
 								</Form>
@@ -154,6 +162,10 @@ function Tracker({ match, history }) {
 							<Loader />
 						) : errorListTransaction ? (
 							<Message variant="danger">{errorListTransaction}</Message>
+						) : loadingDelete ? (
+							<Loader />
+						) : errorDelete ? (
+							<Message variant="danger">{errorListTransaction}</Message>
 						) : (
 							<Row>
 								<Col md={12}>
@@ -190,7 +202,13 @@ function Tracker({ match, history }) {
 															{transaction.amount}
 														</Col>
 														<Col className="text-center" md={2}>
-															Delete
+															<Button
+																// variant="danger"
+																className="btn-sm"
+																onClick={() => deleteHandler(transaction.id)}
+															>
+																<i className="fas fa-trash" />
+															</Button>
 														</Col>
 														<Col md={1} />
 													</Row>
