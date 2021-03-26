@@ -1,8 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Image, Jumbotron, Button } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-function OpenScreen() {
+function OpenScreen({ history }) {
+	const userLogin = useSelector((state) => state.userLogin);
+	const { userInfo } = userLogin;
+	const dispatch = useDispatch();
+	useEffect(
+		() => {
+			if (userInfo) {
+				history.push('/accounts');
+			}
+		},
+		[ history, userInfo ]
+	);
 	return (
 		<div>
 			<Row>

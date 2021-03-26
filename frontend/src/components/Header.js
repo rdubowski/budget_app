@@ -27,7 +27,7 @@ function Header() {
 							{!userInfo && (
 								<LinkContainer to="/register">
 									<Nav.Link>
-										<i className="fas fa-home" />Register
+										<i className="fas fa-home" /> Register
 									</Nav.Link>
 								</LinkContainer>
 							)}
@@ -48,7 +48,7 @@ function Header() {
 							) : (
 								<LinkContainer to="/login">
 									<Nav.Link>
-										<i className="fas fa-user" />Login
+										<i className="fas fa-user" /> Login
 									</Nav.Link>
 								</LinkContainer>
 							)}
