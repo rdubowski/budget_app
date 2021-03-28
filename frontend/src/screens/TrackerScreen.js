@@ -5,7 +5,7 @@ import { Form, Button, Row, Col, Card, ListGroup } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { LinkContainer } from 'react-router-bootstrap';
+import AccountInfo from '../components/AccountInfo';
 import { detailsAccount } from '../actions/accountActions';
 import { listTransactions, addTransaction, deleteTransaction } from '../actions/transactionActions';
 import { TRANSACTION_ADD_RESET } from '../constants/transactionConstants';
@@ -43,7 +43,7 @@ function Tracker({ match, history }) {
 				dispatch(listTransactions(accountId));
 			}
 		},
-		[ dispatch, history, userInfo, success, successDelete ]
+		[ dispatch, history, userInfo, success, successDelete, accountId ]
 	);
 	const submitHandler = (e) => {
 		e.preventDefault();
@@ -135,28 +135,7 @@ function Tracker({ match, history }) {
 						)}
 					</Col>
 					<Col md={8}>
-						<Row>
-							<Col className="text-center" md={12}>
-								<h1 className="pb-0">Your Actual Budget</h1>
-								<h1 className="py-0">${account.actual_balance}</h1>
-								<p>
-									Initial Budget
-									<p>${parseFloat(account.init_balance)}</p>
-								</p>
-							</Col>
-						</Row>
-						<Row>
-							<Col md={4} />
-							<Col md={2} className="text-center">
-								<h2 className="pb-0">Your expenses</h2>
-								<h2 className="py-0">${account.withdraw_sum}</h2>
-							</Col>
-							<Col md={2} className="text-center">
-								<h2 className="pb-0">Your deposit</h2>
-								<h2 className="py-0">${account.deposit_sum}</h2>
-							</Col>
-							<Col md={4} />
-						</Row>
+						<AccountInfo account={account} />
 						<Row>
 							<Col md={12}>
 								<h2 className="text-center py-3">Your Transactions</h2>
@@ -192,9 +171,9 @@ function Tracker({ match, history }) {
 												<ListGroup.Item
 													style={
 														transaction.transaction_type === 'W' ? (
-															{ color: 'white', background: 'red' }
+															{ color: 'white', background: '#D86454' }
 														) : (
-															{ color: 'white', background: 'green' }
+															{ color: 'white', background: '#569168' }
 														)
 													}
 													key={transaction.id}
@@ -213,9 +192,9 @@ function Tracker({ match, history }) {
 															<Button
 																style={
 																	transaction.transaction_type === 'W' ? (
-																		{ background: 'red', border: 'red' }
+																		{ background: '#D86454', border: '#D86454' }
 																	) : (
-																		{ background: 'green', border: 'green' }
+																		{ background: '#569168', border: '#569168' }
 																	)
 																}
 																className="btn-sm"

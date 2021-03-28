@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Row, Col, Image, Jumbotron, Button } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
+import React, { useEffect } from 'react';
+import { Row, Col, Image, Button } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 function OpenScreen({ history }) {
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
-	const dispatch = useDispatch();
 	useEffect(
 		() => {
 			if (userInfo) {
@@ -27,7 +25,7 @@ function OpenScreen({ history }) {
 			<Row>
 				<Col md={4} />
 				<Col>
-					<h1 className="text-center">Your budget!!!</h1>
+					<h1 className="text-center">Manage your budget!</h1>
 					<p>
 						This is a simple app to manage your budget. To use it you have to register or if you registered
 						user, log in.

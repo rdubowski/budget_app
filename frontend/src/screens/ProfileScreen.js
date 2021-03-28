@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Button, Row, Col, Table } from 'react-bootstrap';
+import { Form, Button, } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
@@ -41,7 +41,7 @@ function ProfileScreen({ history }) {
 				}
 			}
 		},
-		[ history, userInfo, user, success ]
+		[ history, userInfo, user, success, dispatch ]
 	);
 
 	const submitHandler = (e) => {
