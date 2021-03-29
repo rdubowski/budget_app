@@ -63,7 +63,8 @@ coverage.xml
 *.cover 
 .hypothesis/ 
 
-
+# Docker
+Dockerfile.prod
 # Environments 
 .env 
 .venv 

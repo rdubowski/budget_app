@@ -18,7 +18,7 @@ function OpenScreen({ history }) {
 			<Row>
 				<Col md={4} />
 				<Col>
-					<Image className="img" src="./flame-payment-processed.svg" fluid />
+					<Image className="img" src="/static/flame-payment-processed.svg" fluid />
 				</Col>
 				<Col md={4} />
 			</Row>
