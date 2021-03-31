@@ -33,11 +33,23 @@ Project is created with:
 
 ## Setup
 To run this project:
-1. Clone project: git clone https://github.com/rdubowski/bookstore/
-2. cd backend/
-3. cd frontend/
-4. npm install
-5. cd ..
-6. docker-compose build
-7. docker-compose up
-
+1. Install Docker, NPM.
+2. Clone repository. 
+```
+$ git clone https://github.com/rdubowski/bookstore/ 
+```
+3. Install frontend dependencies.
+``` 
+$ cd backend/
+$ cd frontend/
+$ npm install
+$ cd ..
+```
+4. Build image with docker-compose
+``` 
+$ docker-compose build
+```
+5. Run image.
+``` 
+$ docker-compose up
+``` 
