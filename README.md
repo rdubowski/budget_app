@@ -25,7 +25,7 @@ This project is simple budget manager, which allows you to store transactions fr
 	
 ## Technologies
 Project is created with:
-* Django (Django Rest Framework)
+* Django(Django Rest Framework)
 * Pytest
 * React(Redux, React Router)
 * Bootstrap
