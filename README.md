@@ -5,7 +5,6 @@ A budget manage website made using Django Rest Framework and React.
 ## Table of contents
 * [General info](#general-info)
 * [Technologies](#technologies)
-* [Features](#features)
 * [Setup](#setup)
 
 ## General info
