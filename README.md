@@ -1,7 +1,7 @@
 # Budget App
 Live  can be viewed at https://your-budgett.herokuapp.com/
 
-A budget manage website made using Django Rest Framework and React.
+A budget manager website made using Django Rest Framework and React.
 ## Table of contents
 * [General info](#general-info)
 * [Technologies](#technologies)
